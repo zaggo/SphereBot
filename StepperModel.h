@@ -1,0 +1,64 @@
+/*
+ * Copyright 2011 by Eberhard Rensch <http://pleasantsoftware.com/developer/3d>
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ */
+ 
+#ifndef STEPPERMODEL
+#define STEPPERMODEL
+
+class StepperModel
+{
+private:
+  
+  int dirPin;
+  int stepPin;
+  int enablePin;
+  int endStopPin;
+  
+  long minStepCount;
+  long maxStepCount;
+  double steps_per_mm;
+  
+  volatile long currentStepcount;
+  volatile long targetStepcount;
+
+  volatile bool direction;
+ 
+  long getStepsForMM(double mm);
+ 
+public:
+
+  volatile long delta;
+  volatile long counter;
+  double targetPosition;
+  
+  StepperModel(int inDirPin, int inStepPin, int inEnablePin, int inEndStopPin, long minSC, long maxSC);
+  
+  void resetSteppersForObjectDiameter(double diameter);
+  
+  void autoHoming();
+
+  
+  void setTargetPosition(double pos);
+  double getCurrentPosition();
+  
+  void enableStepper(bool enabled);
+  
+  void resetStepper();
+  
+  void doStep(int intervals);
+};
+
+#endif
