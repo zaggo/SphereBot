@@ -39,7 +39,6 @@ private:
   long getStepsForMM(double mm);
  
 public:
-
   volatile long delta;
   volatile long counter;
   double targetPosition;
@@ -58,7 +57,7 @@ public:
   
   void resetStepper();
   
-  void doStep(int intervals);
+  void doStep(long intervals);
 };
 
 #endif

@@ -126,7 +126,7 @@ void StepperModel::resetStepper()
   delta=0;  
 }
 
-void StepperModel::doStep(int intervals)
+void StepperModel::doStep(long intervals)
 {
   counter += delta;
   if (counter >= 0) {
