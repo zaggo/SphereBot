@@ -29,3 +29,23 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 Part of this code is based on/inspired by the Helium Frog Delta Robot Firmware
 by Martin Price <http://www.HeliumFrog.com>
 
+To create tags File: ctags --langmap="C++:+.pde" S*
+
+
+GCode commands:
+
+G90	Absolut modus
+G91	Icremental modus:
+
+M300S0	Servo 0 degree
+M300S90	Servo 90 degree
+
+
+M18	Stepper off
+
+G0X0Y40	Rapid movement (pen 0mm, rotation 40mm)
+G1X40Y0 Slower movement (pen 40mm, rotation 0mm)
+G1Y10F660 Movement with feed 660mm/s (rotation 10mm)
+
+;	Comment
+( .. )	Comment
