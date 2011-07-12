@@ -18,14 +18,17 @@
 #include "StepperModel.h"
 #include "WProgram.h"
 
-const double kStepsPerRevolution=200.;
-const int    kMicroStepping=16;
 
 /*
  * inEnablePin < 0 => No Endstop
  */
-StepperModel::StepperModel(int inDirPin, int inStepPin, int inEnablePin, int inEndStopPin, long minSC, long maxSC)
+StepperModel::StepperModel(int inDirPin, int inStepPin, int inEnablePin, int inEndStopPin,
+        long minSC, long maxSC,
+        double in_kStepsPerRevolution, int in_kMicroStepping)
 {
+  kStepsPerRevolution=in_kStepsPerRevolution;
+  kMicroStepping=in_kMicroStepping;
+
   dirPin = inDirPin;
   stepPin = inStepPin;
   enablePin = inEnablePin;
