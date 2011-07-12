@@ -28,6 +28,7 @@
 #include <SoftwareServo.h>
 #include "StepperModel.h"
 
+
 #define TIMER_DELAY 64
 
 /*
@@ -110,11 +111,13 @@ void setup()
     Timer1.initialize(TIMER_DELAY); // Timer for updating pwm pins
     Timer1.attachInterrupt(doInterrupt);
   
+#ifdef AUTO_HOMING
     xAxisStepper.autoHoming();
     xAxisStepper.setTargetPosition(0.);
     commitSteppers(maxFeedrate);
     delay(2000);
     xAxisStepper.enableStepper(false);
+#endif
 }
 
 void loop() // input loop, looks for manual input and then checks to see if and serial commands are coming in

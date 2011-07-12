@@ -56,7 +56,9 @@ void StepperModel::resetSteppersForObjectDiameter(double diameter)
   steps_per_mm = (int)(kStepsPerRevolution/(diameter*M_PI))*kMicroStepping;
   if(endStopPin>=0)
   {
+#ifdef AUTO_HOMING
     autoHoming();
+#endif
     enableStepper(false);
   }
   else
@@ -148,7 +150,8 @@ void StepperModel::doStep(long intervals)
     digitalWrite(stepPin, LOW);
   }
 }  
-  
+
+#ifdef AUTO_HOMING
 void StepperModel::autoHoming()
 {
   enableStepper(true);
@@ -163,3 +166,4 @@ void StepperModel::autoHoming()
 
   currentStepcount= minStepCount-16;
 }
+#endif
