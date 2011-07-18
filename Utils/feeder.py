@@ -22,6 +22,7 @@ DEVICE = "/dev/tty.PL2303-00004006"
 
 import sys
 import serial
+import re
 from optparse import OptionParser
 
 def y_displacement(x):
@@ -61,6 +62,13 @@ def correctDisplacement(lineIn):
             lineOut = lineOut + word
 
     return lineOut
+
+def penChange(lineIn):
+    # Test Line for a Pen change request (M1)
+    # If true, wait for user input
+
+    if penChangePattern.match(lineIn):
+        raw_input('Change pen ... press <Return> when finished ')
     
 
 ######################## Main #########################
@@ -82,9 +90,9 @@ if len(args) != 1:
 
 
 if options.wantDisplaceCorrection:
-    import re
     pattern = re.compile('([(!;].*|\s+|[a-zA-Z0-9_:](?:[+-])?\d*(?:\.\d*)?|\w\#\d+|\(.*?\)|\#\d+\=(?:[+-])?\d*(?:\.\d*)?)')
 
+penChangePattern = re.compile('^M01')
 
 fileToFeed = args[0]
 gcode = open(fileToFeed, "r")
@@ -99,6 +107,8 @@ for line in lines:
     currentLine = currentLine + 1
 
     print line, "({0:.1f}%)".format((currentLine / totalLines)*100),
+
+    penChange(line)
 
     if options.wantDisplaceCorrection:
         line = correctDisplacement(line)
