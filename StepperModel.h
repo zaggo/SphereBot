@@ -18,6 +18,9 @@
 #ifndef STEPPERMODEL
 #define STEPPERMODEL
 
+// Uncomment if You have Autohoming:
+//#define AUTO_HOMING 
+
 class StepperModel
 {
 private:
@@ -30,7 +33,10 @@ private:
   long minStepCount;
   long maxStepCount;
   double steps_per_mm;
-  
+
+  double kStepsPerRevolution;
+  int kMicroStepping;
+
   volatile long currentStepcount;
   volatile long targetStepcount;
 
@@ -43,11 +49,16 @@ public:
   volatile long counter;
   double targetPosition;
   
-  StepperModel(int inDirPin, int inStepPin, int inEnablePin, int inEndStopPin, long minSC, long maxSC);
+  StepperModel(int inDirPin, int inStepPin, int inEnablePin, int inEndStopPin,
+          long minSC, long maxSC,
+          double in_kStepsPerRevolution, int in_kMicroStepping
+          );
   
   void resetSteppersForObjectDiameter(double diameter);
   
+#ifdef AUTO_HOMING
   void autoHoming();
+#endif
 
   
   void setTargetPosition(double pos);
