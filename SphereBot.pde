@@ -28,6 +28,7 @@
 #include <SoftwareServo.h>
 #include "StepperModel.h"
 
+
 #define TIMER_DELAY 64
 
 /*
@@ -59,8 +60,10 @@
 
 /* --------- */
 
-StepperModel xAxisStepper(XAXIS_DIR_PIN, XAXIS_STEP_PIN, XAXIS_ENABLE_PIN, XAXIS_ENDSTOP_PIN, XAXIS_MIN_STEPCOUNT, XAXIS_MAX_STEPCOUNT);
-StepperModel rotationStepper(YAXIS_DIR_PIN, YAXIS_STEP_PIN, YAXIS_ENABLE_PIN, YAXIS_ENDSTOP_PIN, 0, 0);
+StepperModel xAxisStepper(XAXIS_DIR_PIN, XAXIS_STEP_PIN, XAXIS_ENABLE_PIN, XAXIS_ENDSTOP_PIN,
+        XAXIS_MIN_STEPCOUNT, XAXIS_MAX_STEPCOUNT, 200.0, 16);
+StepperModel rotationStepper(YAXIS_DIR_PIN, YAXIS_STEP_PIN, YAXIS_ENABLE_PIN, YAXIS_ENDSTOP_PIN,
+        0, 0, 200.0, 16);
 
 SoftwareServo servo;
 boolean servoEnabled=true;
@@ -110,11 +113,13 @@ void setup()
     Timer1.initialize(TIMER_DELAY); // Timer for updating pwm pins
     Timer1.attachInterrupt(doInterrupt);
   
+#ifdef AUTO_HOMING
     xAxisStepper.autoHoming();
     xAxisStepper.setTargetPosition(0.);
     commitSteppers(maxFeedrate);
     delay(2000);
     xAxisStepper.enableStepper(false);
+#endif
 }
 
 void loop() // input loop, looks for manual input and then checks to see if and serial commands are coming in
@@ -499,3 +504,5 @@ void drawArc(double centerX, double centerY, double endpointX, double endpointY,
   }
 }
 
+/* Make life easier for vim users */
+/* vim:set filetype=cpp: */

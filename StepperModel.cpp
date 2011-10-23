@@ -18,14 +18,17 @@
 #include "StepperModel.h"
 #include "WProgram.h"
 
-const double kStepsPerRevolution=200.;
-const int    kMicroStepping=16;
 
 /*
  * inEnablePin < 0 => No Endstop
  */
-StepperModel::StepperModel(int inDirPin, int inStepPin, int inEnablePin, int inEndStopPin, long minSC, long maxSC)
+StepperModel::StepperModel(int inDirPin, int inStepPin, int inEnablePin, int inEndStopPin,
+        long minSC, long maxSC,
+        double in_kStepsPerRevolution, int in_kMicroStepping)
 {
+  kStepsPerRevolution=in_kStepsPerRevolution;
+  kMicroStepping=in_kMicroStepping;
+
   dirPin = inDirPin;
   stepPin = inStepPin;
   enablePin = inEnablePin;
@@ -46,17 +49,19 @@ StepperModel::StepperModel(int inDirPin, int inStepPin, int inEnablePin, int inE
   currentStepcount=0;
   targetStepcount=0;
 
-  steps_per_mm = (int)(kStepsPerRevolution/(45.*M_PI))*kMicroStepping; // default value for a "normal" egg (45 mm diameter)
+  steps_per_mm = (int)((kStepsPerRevolution/(45.*M_PI))*kMicroStepping+0.5); // default value for a "normal" egg (45 mm diameter)
   enableStepper(false);
 }
 
 void StepperModel::resetSteppersForObjectDiameter(double diameter)
 {
   // Calculate the motor steps required to move per mm.
-  steps_per_mm = (int)(kStepsPerRevolution/(diameter*M_PI))*kMicroStepping;
+  steps_per_mm = (int)((kStepsPerRevolution/(diameter*M_PI))*kMicroStepping+0.5);
   if(endStopPin>=0)
   {
+#ifdef AUTO_HOMING
     autoHoming();
+#endif
     enableStepper(false);
   }
   else
@@ -148,7 +153,8 @@ void StepperModel::doStep(long intervals)
     digitalWrite(stepPin, LOW);
   }
 }  
-  
+
+#ifdef AUTO_HOMING
 void StepperModel::autoHoming()
 {
   enableStepper(true);
@@ -163,3 +169,4 @@ void StepperModel::autoHoming()
 
   currentStepcount= minStepCount-16;
 }
+#endif
